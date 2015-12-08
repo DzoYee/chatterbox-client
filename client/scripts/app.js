@@ -5,20 +5,44 @@ var app = {
 }
 app.server = "https://api.parse.com/1/classes/chatterbox";
 app.init = function(){
-
+  $('.username').on('click',app.addFriend);
+  $('.submit').on('submit',app.handleSubmit);
+  $('#select').on('change',app.roomToggle("here"));
+  /*$('#main').append('<div class="username" onclick="app.addFriend()">placeholder</div>');
+  $('#main').append('<form id="send"><input type="text"></input></form>');
+  $('#send').append('<button class="submit"></button>');*/
 };
 app.clearMessages = function(){
   $('#chats').children().remove();
 };
-app.addMessage = function(message){
-  $('#chats').append('<span>' + message.text + '</span>');
+app.addMessage = function(messages){
+  //iterate through first 20 of array
+  var hashRooms = {}
+
+  _.each(messages, function(message){
+    $('#chats').append('<div class="username" room="'+ message.roomname +'">' + message.objectId + ' : ' + message.username + ' : ' + message.text + '</div>');
+    hashRooms[message.roomname] = message.roomname;
+  })
+
+  _.each(hashRooms, function(room) {
+    $('select').append('<option value="'+room+'"">'+room+'</option>');
+  })
 };
 app.addRoom = function(lobName){
   $('#roomSelect').append('<div>' + lobName + '</div>');
 };
 app.addFriend = function(){
-  alert('dude');
+  
 };
+app.handleSubmit = function(){
+
+};
+app.roomToggle = function(room) {
+  console.log('room: ', room);
+  $('.username').toggle();
+  $('div[room='+room+']').toggle();
+};
+
 app.fetch = function(){
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
@@ -27,13 +51,17 @@ app.fetch = function(){
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: function (data) {
-      console.log(data)
       // console.log('get data: ', data);
       console.log('chatterbox: Message sent');
+
+      var messageList = data.results
+        // console.log('message: ', message);
+      app.addMessage(messageList);
+
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to send message');
+      console.error('chatterbox: Failed to receive message');
     }
   });  
 };
@@ -63,7 +91,10 @@ var message = {
           roomname: 'lobby'
 };
 
-// app.send()
+// app.init()
+ app.fetch()
+
+
 // setTimeout(function(){app.fetch()},10000);
 
 
