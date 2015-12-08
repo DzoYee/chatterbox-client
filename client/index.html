@@ -15,11 +15,16 @@
   <body>
     <div id="main">
       <h1>chatterbox</h1>
-      <select id="roomSelection" onchange="app.roomToggle()">
-      </select>
+      <button class = "submit" type = "button" onclick="app.fetch()">Refresh</button>
+      
+      <select id="roomSelection" onchange="app.roomToggle()"></select>
+      
       <form id="send">
-      <input id="message" type="text" value = "" name="message">
-      <input class = "submit" type = "submit" value ="Submit">  
+        <input id="newroom" type="text" value = "NewRoomName" name="newroom">
+        <button class = "submit" type = "button" onclick="app.handleRoom()">Make Room</button>
+        
+        <input id="message" type="text" value = "Message" name="message">
+        <button class = "submit" type = "button" onclick="app.handleMessage()">Send</button>
       </form>
       <div id="chats"></div>
       <div id="roomSelect"></div>
