@@ -28,7 +28,9 @@ app.addMessage = function(messages){
 
   $('#chats').children().remove();
   _.each(messages, function(message){
-    $('#chats').append('<div class="username" room="'+ message.roomname +'">' + message.objectId + ' : ' + message.username + ' : ' + message.text + '</div>');
+    $('#chats').append($('<div class = "username" onclick="app.addFriend(this)"></div>').text(message.objectId + ' : ' + message.username + ' : ' 
+      + message.text).attr("room", message.roomname).attr("user", message.username));
+    // $('#chats').append('<div class="username" room="'+ message.roomname +'">' + message.objectId + ' : ' + message.username + ' : ' + message.text + '</div>');
     hashRooms[message.roomname] = message.roomname;
   })
 
@@ -40,8 +42,17 @@ app.addMessage = function(messages){
 app.addRoom = function(lobName){
   $('#roomSelect').append('<div>' + lobName + '</div>');
 };
-app.addFriend = function(){
-  
+app.addFriend = function(msg){
+  var user = $(msg).attr('user');
+  if ($(msg).attr('friendtog') === "true") {
+    console.log("white")
+    $('div[user="'+user+'"]').css('font-size', 16).css('background-color', '#FFF').attr("friendTog", false);  
+  } else {
+    console.log("gray")
+    $('div[user="'+user+'"]').css('font-size', 20).css('background-color', '#CCC').attr("friendTog", true);
+  }
+
+
 };
 app.handleSubmit = function(){
   var username = window.location.search.slice(10);
@@ -76,8 +87,8 @@ var MakeMessage = function(room, username, message){
 
 app.roomToggle = function() {
   var room = $( "#roomSelection" ).val();
-  $('.username').toggle();
-  $('div[room="'+room+'"]').toggle();
+  $('.username').hide();
+  $('div[room="'+room+'"]').show();
   $('#newroom').val(room);
 };
 
